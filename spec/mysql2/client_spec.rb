@@ -4,6 +4,7 @@ require 'spec_helper'
 describe Mysql2::Client do
   before(:each) do
     @client = Mysql2::Client.new
+    @klass = Mysql2::Client
   end
 
   it "should respond to #query" do
@@ -12,37 +13,37 @@ describe Mysql2::Client do
 
   context "#pseudo_bind" do
     it "should return query just same as argument, if without any placeholders" do
-      @client.__send__(:pseudo_bind, "SELECT x,y,z FROM x WHERE x='1'", []).should eql("SELECT x,y,z FROM x WHERE x='1'")
+      @klass.pseudo_bind("SELECT x,y,z FROM x WHERE x='1'", []).should eql("SELECT x,y,z FROM x WHERE x='1'")
     end
 
     it "should return replaced query if with placeholders" do
-      @client.__send__(:pseudo_bind, "SELECT x,y,z FROM x WHERE x=?", [1]).should eql("SELECT x,y,z FROM x WHERE x='1'")
-      @client.__send__(:pseudo_bind, "SELECT x,y,z FROM x WHERE x=? AND y=?", [1, 'X']).should eql("SELECT x,y,z FROM x WHERE x='1' AND y='X'")
+      @klass.pseudo_bind("SELECT x,y,z FROM x WHERE x=?", [1]).should eql("SELECT x,y,z FROM x WHERE x='1'")
+      @klass.pseudo_bind("SELECT x,y,z FROM x WHERE x=? AND y=?", [1, 'X']).should eql("SELECT x,y,z FROM x WHERE x='1' AND y='X'")
     end
       
     it "should raise ArgumentError if mismatch exists between placeholders and arguments" do
       expect {
-        @client.__send__(:pseudo_bind, "SELECT x,y,z FROM x", [1])
+        @klass.pseudo_bind("SELECT x,y,z FROM x", [1])
       }.should raise_exception(ArgumentError)
       expect {
-        @client.__send__(:pseudo_bind, "SELECT x,y,z FROM x WHERE x=?", [1,2])
+        @klass.pseudo_bind("SELECT x,y,z FROM x WHERE x=?", [1,2])
       }.should raise_exception(ArgumentError)
       expect {
-        @client.__send__(:pseudo_bind, "SELECT x,y,z FROM x WHERE x=? AND y=?", [1])
+        @klass.pseudo_bind("SELECT x,y,z FROM x WHERE x=? AND y=?", [1])
       }.should raise_exception(ArgumentError)
       expect {
-        @client.__send__(:pseudo_bind, "SELECT x,y,z FROM x WHERE x=?", [])
+        @klass.pseudo_bind("SELECT x,y,z FROM x WHERE x=?", [])
       }.should raise_exception(ArgumentError)
     end
 
     it "should replace placeholder with NULL about nil" do
-      @client.__send__(:pseudo_bind, "UPDATE x SET y=? WHERE x=?", [nil,1]).should eql("UPDATE x SET y=NULL WHERE x='1'")
+      @klass.pseudo_bind("UPDATE x SET y=? WHERE x=?", [nil,1]).should eql("UPDATE x SET y=NULL WHERE x='1'")
     end
 
     it "should replace placeholder with formatted timestamp string about Time object" do
       require 'time'
       t = Time.strptime('2012/04/20 16:50:45', '%Y/%m/%d %H:%M:%S')
-      @client.__send__(:pseudo_bind, "UPDATE x SET y=? WHERE x=?", [t,1]).should eql("UPDATE x SET y='2012-04-20 16:50:45' WHERE x='1'")
+      @klass.pseudo_bind("UPDATE x SET y=? WHERE x=?", [t,1]).should eql("UPDATE x SET y='2012-04-20 16:50:45' WHERE x='1'")
     end
   end
 

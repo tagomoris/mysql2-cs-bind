@@ -11,12 +11,11 @@ class Mysql2::Client
     if args.size < 1
       query(sql, options)
     else
-      query(pseudo_bind(sql, args.flatten), options)
+      query(Mysql2::Client.pseudo_bind(sql, args.flatten), options)
     end
   end
 
-  private
-  def pseudo_bind(sql, values)
+  def self.pseudo_bind(sql, values)
     sql = sql.dup
 
     placeholders = []

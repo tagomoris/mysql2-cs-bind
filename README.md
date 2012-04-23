@@ -20,7 +20,7 @@ Or install it yourself as:
 
 Require 'mysql2-cs-bind' instead of (or after) 'mysql2', you can use Mysql2::Client#xquery with bound variables like below:
 
-    use 'mysql2-cs-bind'
+    require 'mysql2-cs-bind'
     client = Mysql2::Client.new(...)
     client.xquery('SELECT x,y,z FROM tbl WHERE x=? AND y=?', val1, val2) #=> Mysql2::Result
 

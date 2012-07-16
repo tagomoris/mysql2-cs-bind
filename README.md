@@ -44,6 +44,11 @@ Formatting for nil and Time objects:
     client.xquery('INSERT INTO tbl (val1,created_at) VALUES (?,?)', nil, Time.now)
     #execute "INSERT INTO tbl (val1,created_at) VALUES (NULL,'2012-01-02 13:45:01')"
 
+Expanding for Array object.
+
+    client.xquery('SELECT val1 FROM tbl WHERE id IN (?)', [[1,2,3]])
+    #execute "SELECT val1 FROM tbl WHERE id IN ('1','2','3')"
+
 ### Type Conversion of Numbers
 
 Mysql2::Client#xquery quotes any values as STRING. This may not be problems for almost all kind of queries, but sometimes you may be confused by return value types:

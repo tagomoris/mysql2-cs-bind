@@ -32,6 +32,8 @@ class Mysql2::Client
         sql[pos] = 'NULL'
       elsif rawvalue.is_a?(Time)
         sql[pos] = "'" + rawvalue.strftime('%Y-%m-%d %H:%M:%S') + "'"
+      elsif rawvalue.is_a?(Array)
+        sql[pos] = rawvalue.map{|v| "'" + Mysql2::Client.escape(v.to_s) + "'" }.join(",")
       else
         sql[pos] = "'" + Mysql2::Client.escape(rawvalue.to_s) + "'"
       end

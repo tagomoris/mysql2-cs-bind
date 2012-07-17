@@ -45,6 +45,11 @@ describe Mysql2::Client do
       t = Time.strptime('2012/04/20 16:50:45', '%Y/%m/%d %H:%M:%S')
       @klass.pseudo_bind("UPDATE x SET y=? WHERE x=?", [t,1]).should eql("UPDATE x SET y='2012-04-20 16:50:45' WHERE x='1'")
     end
+
+    it "should replace placeholder with value list about Array object" do
+      @klass.pseudo_bind("SELECT x,y,z FROM x WHERE x in (?)", [[1,2,3]]).should eql("SELECT x,y,z FROM x WHERE x in ('1','2','3')")
+      @klass.pseudo_bind("SELECT x,y,z FROM x WHERE x = ? and y in (?)", [1, [1, 2, 3]]).should eql("SELECT x,y,z FROM x WHERE x = '1' and y in ('1','2','3')")
+    end
   end
 
   context "#xquery" do

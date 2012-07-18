@@ -80,6 +80,28 @@ describe Mysql2::Client do
       @client.xquery("SELECT ?+1", 1).first.should eql([2.0])
     end
 
+    it "should read multi style args" do
+      @client.xquery("SELECT id FROM (SELECT 1 AS id) AS tbl WHERE id IN (1)").first["id"].should eql(1)
+
+      @client.xquery("SELECT id FROM (SELECT 1 AS id) AS tbl WHERE id = ?", 1).first["id"].should eql(1)
+      @client.xquery("SELECT id FROM (SELECT 1 AS id) AS tbl WHERE id = ? OR id = ?", 1, 2).first["id"].should eql(1)
+      @client.xquery("SELECT id FROM (SELECT 1 AS id) AS tbl WHERE id = ? OR id = ?", [1,2]).first["id"].should eql(1)
+
+      @client.xquery("SELECT id FROM (SELECT 1 AS id) AS tbl WHERE id in (?)", [1,2,3]).first["id"].should eql(1)
+      @client.xquery("SELECT id FROM (SELECT 1 AS id) AS tbl WHERE id = ? OR id in (?)", 1, [2,3]).first["id"].should eql(1)
+      @client.xquery("SELECT id FROM (SELECT 1 AS id) AS tbl WHERE id = ? OR id in (?)", [1, [2,3]]).first["id"].should eql(1)
+      @client.xquery("SELECT id FROM (SELECT 1 AS id) AS tbl WHERE id in (?) OR id = ?", [1,2], 3).first["id"].should eql(1)
+      @client.xquery("SELECT id FROM (SELECT 1 AS id) AS tbl WHERE id in (?) OR id = ?", [[1,2], 3]).first["id"].should eql(1)
+
+      @client.xquery("SELECT id FROM (SELECT 1 AS id) AS tbl WHERE id IN (1)",:something => :else).first["id"].should eql(1)
+      @client.xquery("SELECT id FROM (SELECT 1 AS id) AS tbl WHERE id = ? OR id in (?)", 1, [2,3],:something => :else).first["id"].should eql(1)
+      @client.xquery("SELECT id FROM (SELECT 1 AS id) AS tbl WHERE id in (?) OR id = ?", [[1,2], 3],:something => :else).first["id"].should eql(1)
+
+      expect {
+        @client.xquery("SELECT id FROM (SELECT 1 AS id) AS tbl WHERE id in (?) OR id = ?", [[1,2], 3, 4],:something => :else)
+      }.should raise_exception(ArgumentError)
+    end
+
     it "should be able to return results with symbolized keys" do
       @client.xquery("SELECT 1", :symbolize_keys => true).first.keys[0].class.should eql(Symbol)
     end

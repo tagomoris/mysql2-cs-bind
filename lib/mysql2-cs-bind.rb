@@ -11,7 +11,7 @@ class Mysql2::Client
     if args.size < 1
       query(sql, options)
     else
-      query(Mysql2::Client.pseudo_bind(sql, args.flatten), options)
+      query(Mysql2::Client.pseudo_bind(sql, args), options)
     end
   end
 
@@ -24,6 +24,7 @@ class Mysql2::Client
       placeholders.push(pos)
       search_pos = pos + 1
     end
+    values = values.flatten(1) if placeholders.length == values.flatten(1).length
     raise ArgumentError, "mismatch between placeholders number and values arguments" if placeholders.length != values.length
 
     while pos = placeholders.pop()

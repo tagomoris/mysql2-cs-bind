@@ -49,6 +49,8 @@ describe Mysql2::Client do
     it "should replace placeholder with value list about Array object" do
       @klass.pseudo_bind("SELECT x,y,z FROM x WHERE x in (?)", [[1,2,3]]).should eql("SELECT x,y,z FROM x WHERE x in ('1','2','3')")
       @klass.pseudo_bind("SELECT x,y,z FROM x WHERE x = ? and y in (?)", [1, [1, 2, 3]]).should eql("SELECT x,y,z FROM x WHERE x = '1' and y in ('1','2','3')")
+      @klass.pseudo_bind("SELECT id FROM (SELECT 1 AS id) AS tbl WHERE id = ? OR id in (?)", [1, [2,3]]).should eql("SELECT id FROM (SELECT 1 AS id) AS tbl WHERE id = '1' OR id in ('2','3')")
+      @klass.pseudo_bind("SELECT id FROM (SELECT 1 AS id) AS tbl WHERE id in (?) OR id = ?", [[1,2], 3]).should eql("SELECT id FROM (SELECT 1 AS id) AS tbl WHERE id in ('1','2') OR id = '3'")
     end
   end
 

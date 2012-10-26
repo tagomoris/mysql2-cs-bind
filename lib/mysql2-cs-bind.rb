@@ -31,7 +31,7 @@ class Mysql2::Client
       rawvalue = values.pop()
       if rawvalue.nil?
         sql[pos] = 'NULL'
-      elsif rawvalue.is_a?(Time)
+      elsif rawvalue.respond_to?(:strftime)
         sql[pos] = "'" + rawvalue.strftime('%Y-%m-%d %H:%M:%S') + "'"
       elsif rawvalue.is_a?(Array)
         sql[pos] = rawvalue.map{|v| "'" + Mysql2::Client.escape(v.to_s) + "'" }.join(",")

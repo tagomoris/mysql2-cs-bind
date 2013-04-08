@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |gem|
   gem.name          = "mysql2-cs-bind"
-  gem.version       = "0.0.5"
+  gem.version       = "0.0.6"
   gem.authors       = ["TAGOMORI Satoshi"]
   gem.email         = ["tagomoris@gmail.com"]
   gem.homepage      = "https://github.com/tagomoris/mysql2-cs-bind"
@@ -17,7 +17,6 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency "mysql2"  
 
   # tests
-  gem.add_development_dependency "mysql2"
   gem.add_development_dependency 'eventmachine'
   gem.add_development_dependency 'rake-compiler', "~> 0.7.7"
   gem.add_development_dependency 'rake', '0.8.7' # NB: 0.8.7 required by rake-compiler 0.7.9

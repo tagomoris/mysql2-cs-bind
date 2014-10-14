@@ -1,6 +1,6 @@
-# mysql-cs-bind
+# mysql2-cs-bind
 
-'mysql-cs-bind' is extension of 'mysql2', to add method of client-side variable binding (pseudo prepared statement).
+'mysql2-cs-bind' is extension of 'mysql2', to add method of client-side variable binding (pseudo prepared statement).
 
 ## Installation
 

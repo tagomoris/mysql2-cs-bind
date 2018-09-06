@@ -1,5 +1,6 @@
 # encoding: UTF-8
 require 'spec_helper'
+require 'time'
 
 describe Mysql2::Client do
   before(:each) do
@@ -41,16 +42,23 @@ describe Mysql2::Client do
     end
 
     it "should replace placeholder with formatted timestamp string about Time object" do
-      require 'time'
       t = Time.strptime('2012/04/20 16:50:45', '%Y/%m/%d %H:%M:%S')
       @klass.pseudo_bind("UPDATE x SET y=? WHERE x=?", [t,1]).should eql("UPDATE x SET y='2012-04-20 16:50:45' WHERE x='1'")
     end
 
+    it "should replace placeholder with TRUE/FALSE about true/false" do
+      @klass.pseudo_bind("UPDATE x SET y=? WHERE x=?", [true,1]).should eql("UPDATE x SET y=TRUE WHERE x='1'")
+      @klass.pseudo_bind("UPDATE x SET y=? WHERE x=?", [false,1]).should eql("UPDATE x SET y=FALSE WHERE x='1'")
+    end
+
     it "should replace placeholder with value list about Array object" do
+      t = Time.strptime('2012/04/20 16:50:45', '%Y/%m/%d %H:%M:%S')
       @klass.pseudo_bind("SELECT x,y,z FROM x WHERE x in (?)", [[1,2,3]]).should eql("SELECT x,y,z FROM x WHERE x in ('1','2','3')")
       @klass.pseudo_bind("SELECT x,y,z FROM x WHERE x = ? and y in (?)", [1, [1, 2, 3]]).should eql("SELECT x,y,z FROM x WHERE x = '1' and y in ('1','2','3')")
       @klass.pseudo_bind("SELECT id FROM (SELECT 1 AS id) AS tbl WHERE id = ? OR id in (?)", [1, [2,3]]).should eql("SELECT id FROM (SELECT 1 AS id) AS tbl WHERE id = '1' OR id in ('2','3')")
       @klass.pseudo_bind("SELECT id FROM (SELECT 1 AS id) AS tbl WHERE id in (?) OR id = ?", [[1,2], 3]).should eql("SELECT id FROM (SELECT 1 AS id) AS tbl WHERE id in ('1','2') OR id = '3'")
+      @klass.pseudo_bind("SELECT x,y,z FROM x WHERE x = ? and y in (?)", [1, [true, nil]]).should eql("SELECT x,y,z FROM x WHERE x = '1' and y in (TRUE,NULL)")
+      @klass.pseudo_bind("SELECT x,y,z FROM x WHERE x = ? and y in (?)", [1, [t, nil]]).should eql("SELECT x,y,z FROM x WHERE x = '1' and y in ('2012-04-20 16:50:45',NULL)")
     end
   end
 

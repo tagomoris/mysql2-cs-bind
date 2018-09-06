@@ -29,17 +29,28 @@ class Mysql2::Client
 
     while pos = placeholders.pop()
       rawvalue = values.pop()
-      if rawvalue.nil?
-        sql[pos] = 'NULL'
-      elsif rawvalue.respond_to?(:strftime)
-        sql[pos] = "'" + rawvalue.strftime('%Y-%m-%d %H:%M:%S') + "'"
-      elsif rawvalue.is_a?(Array)
-        sql[pos] = rawvalue.map{|v| "'" + Mysql2::Client.escape(v.to_s) + "'" }.join(",")
+      if rawvalue.is_a?(Array)
+        sql[pos] = rawvalue.map{|v| quote(v) }.join(",")
       else
-        sql[pos] = "'" + Mysql2::Client.escape(rawvalue.to_s) + "'"
+        sql[pos] = quote(rawvalue)
       end
     end
     sql
   end
 
+  private
+
+  def self.quote(rawvalue)
+    if rawvalue.nil?
+      'NULL'
+    elsif rawvalue == true
+      'TRUE'
+    elsif rawvalue == false
+      'FALSE'
+    elsif rawvalue.respond_to?(:strftime)
+      "'" + rawvalue.strftime('%Y-%m-%d %H:%M:%S') + "'"
+    else
+      "'" + Mysql2::Client.escape(rawvalue.to_s) + "'"
+    end
+  end
 end

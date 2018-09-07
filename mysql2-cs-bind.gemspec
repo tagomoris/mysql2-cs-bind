@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |gem|
   gem.name          = "mysql2-cs-bind"
-  gem.version       = "0.0.6"
+  gem.version       = "0.0.7"
   gem.authors       = ["TAGOMORI Satoshi"]
   gem.email         = ["tagomoris@gmail.com"]
   gem.homepage      = "https://github.com/tagomoris/mysql2-cs-bind"

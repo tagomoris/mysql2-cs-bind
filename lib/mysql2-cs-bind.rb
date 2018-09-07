@@ -11,7 +11,10 @@ class Mysql2::Client
     if args.size < 1
       query(sql, options)
     else
-      query(Mysql2::Client.pseudo_bind(sql, args), options)
+      Thread.exclusive do
+        @query_options.merge! options
+        prepare(sql).execute(args)
+      end
     end
   end
 

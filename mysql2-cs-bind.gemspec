@@ -14,7 +14,7 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
 
-  gem.add_runtime_dependency "mysql2"  
+  gem.add_runtime_dependency "mysql2", "~> 0.4.0"
 
   # tests
   gem.add_development_dependency 'eventmachine'

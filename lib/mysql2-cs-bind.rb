@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'mysql2'
 
 class Mysql2::Client
@@ -48,9 +50,9 @@ class Mysql2::Client
     elsif rawvalue == false
       'FALSE'
     elsif rawvalue.respond_to?(:strftime)
-      "'" + rawvalue.strftime('%Y-%m-%d %H:%M:%S') + "'"
+      "'#{rawvalue.strftime('%Y-%m-%d %H:%M:%S')}'"
     else
-      "'" + Mysql2::Client.escape(rawvalue.to_s) + "'"
+      "'#{Mysql2::Client.escape(rawvalue.to_s)}'"
     end
   end
 end

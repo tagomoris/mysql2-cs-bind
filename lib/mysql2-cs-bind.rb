@@ -21,8 +21,11 @@ class Mysql2::Client
       placeholders.push(pos)
       search_pos = pos + 1
     end
-    values = values.flatten(1) if placeholders.length == values.flatten(1).length
-    raise ArgumentError, "mismatch between placeholders number and values arguments" if placeholders.length != values.length
+
+    if placeholders.length != values.length &&
+       placeholders.length != (values = values.flatten(1)).length
+      raise ArgumentError, "mismatch between placeholders number and values arguments"
+    end
 
     while pos = placeholders.pop()
       rawvalue = values.pop()

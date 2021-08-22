@@ -43,16 +43,19 @@ class Mysql2::Client
   private
 
   def self.quote(rawvalue)
-    if rawvalue.nil?
+    case rawvalue
+    when nil
       'NULL'
-    elsif rawvalue == true
+    when true
       'TRUE'
-    elsif rawvalue == false
+    when false
       'FALSE'
-    elsif rawvalue.respond_to?(:strftime)
-      "'#{rawvalue.strftime('%Y-%m-%d %H:%M:%S')}'"
     else
-      "'#{Mysql2::Client.escape(rawvalue.to_s)}'"
+      if rawvalue.respond_to?(:strftime)
+        "'#{rawvalue.strftime('%Y-%m-%d %H:%M:%S')}'"
+      else
+        "'#{Mysql2::Client.escape(rawvalue.to_s)}'"
+      end
     end
   end
 end

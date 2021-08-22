@@ -4,13 +4,8 @@ require 'mysql2'
 
 class Mysql2::Client
 
-  def xquery(sql, *args)
-    options = if args.size > 0 and args[-1].is_a?(Hash)
-                args.pop
-              else
-                {}
-              end
-    if args.size < 1
+  def xquery(sql, *args, **options)
+    if args.empty?
       query(sql, options)
     else
       query(Mysql2::Client.pseudo_bind(sql, args), options)

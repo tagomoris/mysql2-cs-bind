@@ -34,36 +34,4 @@ describe Mysql2::Error do
   it "should alias #message to #error" do
     @error.should respond_to(:error)
   end
-
-  if RUBY_VERSION =~ /1.9/
-    it "#message encoding should match the connection's encoding, or Encoding.default_internal if set" do
-      if Encoding.default_internal.nil?
-        @error.message.encoding.should eql(@client.encoding)
-        @error2.message.encoding.should eql(@client2.encoding)
-      else
-        @error.message.encoding.should eql(Encoding.default_internal)
-        @error2.message.encoding.should eql(Encoding.default_internal)
-      end
-    end
-
-    it "#error encoding should match the connection's encoding, or Encoding.default_internal if set" do
-      if Encoding.default_internal.nil?
-        @error.error.encoding.should eql(@client.encoding)
-        @error2.error.encoding.should eql(@client2.encoding)
-      else
-        @error.error.encoding.should eql(Encoding.default_internal)
-        @error2.error.encoding.should eql(Encoding.default_internal)
-      end
-    end
-
-    it "#sql_state encoding should match the connection's encoding, or Encoding.default_internal if set" do
-      if Encoding.default_internal.nil?
-        @error.sql_state.encoding.should eql(@client.encoding)
-        @error2.sql_state.encoding.should eql(@client2.encoding)
-      else
-        @error.sql_state.encoding.should eql(Encoding.default_internal)
-        @error2.sql_state.encoding.should eql(Encoding.default_internal)
-      end
-    end
-  end
 end

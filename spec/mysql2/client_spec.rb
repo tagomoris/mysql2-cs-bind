@@ -71,23 +71,16 @@ describe Mysql2::Client do
       }.to_not raise_exception(Mysql2::Error)
     end
 
-    it "should accept an options hash that inherits from Mysql2::Client.default_query_options" do
-      @client.xquery "SELECT ?", 1, :something => :else
-      @client.query_options.should eql(@client.query_options.merge(:something => :else))
-    end
-
     it "should return results as a hash by default" do
       @client.xquery("SELECT ?", 1).first.class.should eql(Hash)
     end
 
     it "should be able to return results as an array" do
       @client.xquery("SELECT ?", 1, :as => :array).first.class.should eql(Array)
-      @client.xquery("SELECT ?", 1).each(:as => :array)
-      @client.query("SELECT 1").first.should eql([1])
-      @client.query("SELECT '1'").first.should eql(['1'])
+      @client.xquery("SELECT ?", 1).each(:as => :array).first.class.should eql(Array)
       @client.xquery("SELECT 1", :as => :array).first.should eql([1])
-      @client.xquery("SELECT ?", 1).first.should eql(['1'])
-      @client.xquery("SELECT ?+1", 1).first.should eql([2.0])
+      @client.xquery("SELECT ?", 1, :as => :array).first.should eql(['1'])
+      @client.xquery("SELECT ?+1", 1, :as => :array).first.should eql([2.0])
     end
 
     it "should read multi style args" do

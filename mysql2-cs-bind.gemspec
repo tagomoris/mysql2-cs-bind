@@ -19,7 +19,6 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency "mysql2"
 
   # tests
-  gem.add_development_dependency 'eventmachine'
   gem.add_development_dependency 'rake-compiler', "~> 0.7.7"
   gem.add_development_dependency 'rake', '0.8.7' # NB: 0.8.7 required by rake-compiler 0.7.9
   gem.add_development_dependency 'rspec', '2.10.0'

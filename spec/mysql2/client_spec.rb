@@ -21,7 +21,7 @@ describe Mysql2::Client do
       @klass.pseudo_bind("SELECT x,y,z FROM x WHERE x=?", [1]).should eql("SELECT x,y,z FROM x WHERE x='1'")
       @klass.pseudo_bind("SELECT x,y,z FROM x WHERE x=? AND y=?", [1, 'X']).should eql("SELECT x,y,z FROM x WHERE x='1' AND y='X'")
     end
-      
+
     it "should raise ArgumentError if mismatch exists between placeholders and arguments" do
       expect {
         @klass.pseudo_bind("SELECT x,y,z FROM x", [1])
@@ -126,11 +126,5 @@ describe Mysql2::Client do
 
   it "should respond to escape" do
     Mysql2::Client.should respond_to(:escape)
-  end
-
-  if RUBY_VERSION =~ /1.9/
-    it "should respond to #encoding" do
-      @client.should respond_to(:encoding)
-    end
   end
 end
